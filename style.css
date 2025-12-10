@@ -114,3 +114,94 @@ input[type="file"] {
 .danger-btn:hover {
     background: #c82333;
 }
+
+/* --- ABOUT SECTION (Bottom of Sidebar) --- */
+
+.about-section {
+    margin-top: auto; /* Pushes this section to the bottom */
+    padding-top: 20px;
+}
+
+.divider {
+    height: 1px;
+    background: #eee;
+    margin-bottom: 15px;
+}
+
+.about-section p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.social-links {
+    display: flex;
+    gap: 10px;
+}
+
+.social-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: white;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.social-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.github {
+    background-color: #24292e; /* GitHub Black */
+}
+
+.youtube {
+    background-color: #ff0000; /* YouTube Red */
+}
+
+/* --- BRANDING --- */
+.brand-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px; /* Space before the first step */
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.app-logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain; /* Keeps aspect ratio */
+    border-radius: 8px;  /* Soft corners */
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-text h1 {
+    font-size: 1.1rem; /* Slightly smaller to fit two lines */
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.brand-subtitle {
+    font-size: 0.85rem;
+    color: #007bff; /* Blue accent color */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
