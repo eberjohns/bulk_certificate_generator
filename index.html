@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Certificate Generator</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="sidebar">
+            <h1>Cert Maker</h1>
+            
+            <div class="step-box">
+                <h3>1. Upload Data (Excel/CSV)</h3>
+                <input type="file" id="dataUpload" accept=".csv, .xlsx, .xls">
+                <p class="small-text">First row must contain headers (Name, Date, etc)</p>
+            </div>
+
+            <div class="step-box">
+                <h3>2. Upload Template Image</h3>
+                <input type="file" id="templateUpload" accept="image/*">
+            </div>
+
+            <div class="step-box" id="field-controls" style="display:none;">
+                <h3>3. Add Fields</h3>
+                <p class="small-text">Click to add to canvas:</p>
+                <div id="buttons-container">
+                    </div>
+            </div>
+
+            <div class="step-box footer">
+                <button id="previewBtn" class="secondary-btn">Preview First Row</button>
+                <button id="generateBtn" class="primary-btn">Generate & Zip</button>
+            </div>
+            
+            <div id="status-message"></div>
+        </div>
+
+        <div class="main-area">
+            <div class="canvas-wrapper">
+                <canvas id="c"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
