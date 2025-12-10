@@ -361,6 +361,41 @@ canvas.on('object:moving', function(options) {
     }
 });
 
-// 3. TRIGGER GRID ON IMAGE LOAD
-// We need to redraw grid whenever the image changes/resizes
-// Find your 'templateUpload' listener and add `drawGrid()` at the end of it.
+// --- DELETION LOGIC ---
+
+// 1. Function to delete whatever is currently selected
+function deleteSelectedObjects() {
+    const activeObjects = canvas.getActiveObjects();
+    
+    if (activeObjects.length) {
+        // Discard the selection group first to avoid rendering ghosts
+        canvas.discardActiveObject();
+        
+        // Loop through all selected objects and remove them
+        activeObjects.forEach(function(obj) {
+            canvas.remove(obj);
+        });
+        
+        canvas.renderAll();
+    }
+}
+
+// 2. Button Click Event
+document.getElementById('deleteBtn').addEventListener('click', deleteSelectedObjects);
+
+// 3. Keyboard Event (Delete / Backspace)
+window.addEventListener('keydown', function(e) {
+    // Check if the key pressed is Delete or Backspace
+    if (e.key === "Delete" || e.key === "Backspace") {
+        
+        // SAFETY CHECK: Are we currently typing inside a text box?
+        // If yes, do NOT delete the object, let the default Backspace happen
+        const activeObj = canvas.getActiveObject();
+        if (activeObj && activeObj.isEditing) {
+            return; 
+        }
+        
+        // Otherwise, delete the object
+        deleteSelectedObjects();
+    }
+});

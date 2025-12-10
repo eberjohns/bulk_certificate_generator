@@ -15,24 +15,18 @@
 
     <div class="app-container">
         <div class="sidebar">
-            <h1>Cert Maker</h1>
+            <h1>Certificate Maker</h1>
+            <p class="small-text">by eberjohnscd</p>
             
             <div class="step-box">
                 <h3>1. Upload Data (Excel/CSV)</h3>
                 <input type="file" id="dataUpload" accept=".csv, .xlsx, .xls">
-                <p class="small-text">First row must contain headers (Name, Date, etc)</p>
+                <p class="small-text">First row must contain headers (Name, Event, etc)</p>
             </div>
 
             <div class="step-box">
                 <h3>2. Upload Template Image</h3>
                 <input type="file" id="templateUpload" accept="image/*">
-            </div>
-
-            <div class="step-box">
-                <h3>Tools</h3>
-                <button id="toggleGridBtn" class="secondary-btn" style="background: #555;">
-                    Grid: ON
-                </button>
             </div>
 
             <div class="step-box" id="field-controls" style="display:none;">
@@ -42,9 +36,15 @@
                     </div>
             </div>
 
+            <div class="step-box">
+                <h3>Tools</h3>
+                <button id="toggleGridBtn" class="secondary-btn" style="background: #555;">Grid: ON</button>
+                <button id="deleteBtn" class="secondary-btn" style="background: #dc3545; margin-top: 5px;">Delete Selected Field</button>
+            </div>
+
             <div class="step-box footer">
                 <button id="previewBtn" class="secondary-btn">Preview First Row</button>
-                <button id="generateBtn" class="primary-btn">Generate & Zip</button>
+                <button id="generateBtn" class="primary-btn">Generate & Download Zip</button>
             </div>
             
             <div id="status-message"></div>
