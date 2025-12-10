@@ -26,6 +26,8 @@ document.getElementById('templateUpload').addEventListener('change', function(e)
             
             // 4. "Fit to Screen" Logic
             fitCanvasToScreen(imgInstance.width, imgInstance.height);
+
+            drawGrid();
         }
     }
     reader.readAsDataURL(e.target.files[0]);
@@ -131,27 +133,29 @@ function generateFieldButtons(headersList) {
 // 5. ADD DRAGGABLE TEXT TO CANVAS (FIXED)
 // -------------------------------
 function addTextToCanvas(headerName) {
-    // Check if canvas exists
-    if (!canvas) {
-        console.error("Canvas is not initialized!");
-        return;
-    }
+    if (!canvas) return;
+
+    const center = canvas.getCenter();
+    
+    // Offset slightly so multiple clicks don't stack perfectly
+    // We use a random offset between -20 and 20 pixels
+    const offset = (Math.random() * 40) - 20;
 
     const text = new fabric.Text(`{${headerName}}`, {
-        left: 100,  // Fixed position to ensure it appears on screen
-        top: 100,
+        left: center.left + offset, 
+        top: center.top + offset,
         fontFamily: 'Arial',
         fontSize: 40,
-        fill: '#000000', // Black text
-        backgroundColor: '#ffffff', // White background so you can definitely see it
+        fill: '#000000',
+        originX: 'center', 
+        originY: 'center', 
+        textAlign: 'center',
         id: headerName 
     });
     
     canvas.add(text);
     canvas.setActiveObject(text);
-    canvas.renderAll(); // FORCE RENDER
-    
-    console.log(`Added ${headerName} to canvas`); // Debug log
+    canvas.renderAll();
 }
 
 // 6. GENERATE & ZIP (THE MAGIC LOOP)
@@ -241,3 +245,89 @@ document.getElementById('previewBtn').addEventListener('click', function() {
         alert("Upload data to preview.");
     }
 });
+
+// --- GRID & CENTER SNAPPING ---
+
+const gridSize = 40; // The size of the snap blocks (pixels)
+const snapThreshold = 15; // How close to center before snapping to center
+
+// 1. DRAW THE GRID (Visual Aid)
+function drawGrid() {
+    // Remove old grid if exists
+    const objects = canvas.getObjects();
+    for (let i = objects.length - 1; i >= 0; i--) {
+        if (objects[i].id === 'grid-line') {
+            canvas.remove(objects[i]);
+        }
+    }
+
+    // Draw Vertical Lines
+    for (let i = 0; i < (canvas.width / gridSize); i++) {
+        const line = new fabric.Line([i * gridSize, 0, i * gridSize, canvas.height], {
+            stroke: '#ccc',
+            selectable: false,
+            evented: false,
+            id: 'grid-line',
+            opacity: 0.5
+        });
+        canvas.sendToBack(line); // Send behind text
+        canvas.add(line);
+    }
+
+    // Draw Horizontal Lines
+    for (let i = 0; i < (canvas.height / gridSize); i++) {
+        const line = new fabric.Line([0, i * gridSize, canvas.width, i * gridSize], {
+            stroke: '#ccc',
+            selectable: false,
+            evented: false,
+            id: 'grid-line',
+            opacity: 0.5
+        });
+        canvas.sendToBack(line);
+        canvas.add(line);
+    }
+    
+    // Draw Center Line (Red)
+    const centerLine = new fabric.Line([canvas.width / 2, 0, canvas.width / 2, canvas.height], {
+        stroke: 'red',
+        strokeWidth: 2,
+        selectable: false,
+        evented: false,
+        id: 'grid-line',
+        opacity: 0.8
+    });
+    canvas.add(centerLine);
+}
+
+// 2. HANDLE MOVEMENT (The Snapping Logic)
+canvas.on('object:moving', function(options) {
+    const target = options.target;
+    const canvasWidth = canvas.width;
+    
+    // A. SNAP TO CENTER (Priority)
+    // Check if the object's center is close to the image center
+    const objectCenter = target.left + (target.width * target.scaleX) / 2;
+    
+    if (Math.abs(objectCenter - canvasWidth / 2) < snapThreshold) {
+        // Snap exactly to center
+        target.set({
+            left: (canvasWidth / 2) - (target.width * target.scaleX) / 2
+        });
+        
+        // For Y-axis, still use grid
+        target.set({
+            top: Math.round(target.top / gridSize) * gridSize
+        });
+    } 
+    // B. SNAP TO GRID (Default)
+    else {
+        target.set({
+            left: Math.round(target.left / gridSize) * gridSize,
+            top: Math.round(target.top / gridSize) * gridSize
+        });
+    }
+});
+
+// 3. TRIGGER GRID ON IMAGE LOAD
+// We need to redraw grid whenever the image changes/resizes
+// Find your 'templateUpload' listener and add `drawGrid()` at the end of it.
