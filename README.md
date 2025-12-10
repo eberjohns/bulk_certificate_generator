@@ -7,6 +7,8 @@ A powerful, **client-side** web application designed to help student organizers 
 
 It features a drag-and-drop interface, supports Excel/CSV uploads, and runs entirely in the browser—meaning **no server costs** and **100% data privacy** (student data never leaves the computer).
 
+[Visit website](http://bulkcertificategenerator.netlify.app/)
+
 ---
 
 ## 📱 Screenshots
