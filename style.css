@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Great+Vibes&family=Oswald&family=Playfair+Display&family=Roboto&display=swap');
+
 /* style.css */
 body {
     margin: 0;
@@ -95,4 +97,20 @@ input[type="file"] {
 .canvas-container {
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     border: 1px solid #ddd; 
+}
+
+.danger-btn {
+    width: 100%;
+    padding: 10px;
+    background: #dc3545; /* Red */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.danger-btn:hover {
+    background: #c82333;
 }

@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Easy Certificate Generator</title>
     <link rel="stylesheet" href="style.css">
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 <body>
+    <div style="font-family: 'Great Vibes'; opacity: 0; height: 0; width: 0;">.</div>
+    <div style="font-family: 'Roboto'; opacity: 0; height: 0; width: 0;">.</div>
+    <div style="font-family: 'Oswald'; opacity: 0; height: 0; width: 0;">.</div>
+    <div style="font-family: 'Playfair Display'; opacity: 0; height: 0; width: 0;">.</div>
+    <div style="font-family: 'Courier Prime'; opacity: 0; height: 0; width: 0;">.</div>
 
     <div class="app-container">
         <div class="sidebar">
@@ -19,27 +24,50 @@
             <p class="small-text">by eberjohnscd</p>
             
             <div class="step-box">
-                <h3>1. Upload Data (Excel/CSV)</h3>
-                <input type="file" id="dataUpload" accept=".csv, .xlsx, .xls">
-                <p class="small-text">First row must contain headers (Name, Event, etc)</p>
-            </div>
-
-            <div class="step-box">
-                <h3>2. Upload Template Image</h3>
+                <h3>1. Data & Template</h3>
+                <input type="file" id="dataUpload" accept=".csv, .xlsx, .xls" style="margin-bottom:10px;">
                 <input type="file" id="templateUpload" accept="image/*">
-            </div>
-
-            <div class="step-box" id="field-controls" style="display:none;">
-                <h3>3. Add Fields</h3>
-                <p class="small-text">Click to add to canvas:</p>
-                <div id="buttons-container">
-                    </div>
             </div>
 
             <div class="step-box">
                 <h3>Tools</h3>
-                <button id="toggleGridBtn" class="secondary-btn" style="background: #555;">Grid: ON</button>
-                <button id="deleteBtn" class="secondary-btn" style="background: #dc3545; margin-top: 5px;">Delete Selected Field</button>
+                <div style="display: flex; align-items: center;">
+                    <input type="checkbox" id="gridToggle" checked style="width: auto; margin-right: 10px;">
+                    <label for="gridToggle" style="cursor: pointer;">Snap to Grid</label>
+                </div>
+            </div>
+
+            <div class="step-box" id="field-controls" style="display:none;">
+                <h3>Add Fields</h3>
+                <div id="buttons-container"></div>
+            </div>
+
+            <div class="step-box" id="properties-panel" style="display:none; border-left: 4px solid #007bff; background: #f8f9fa;">
+                <h3 style="color: #007bff;">Field Properties</h3>
+                
+                <label class="small-text">Font Family</label>
+                <select id="fontFamilyBtn" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Oswald">Oswald</option>
+                    <option value="Playfair Display">Playfair Display</option>
+                    <option value="Great Vibes">Great Vibes</option>
+                    <option value="Courier Prime">Courier</option>
+                </select>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label class="small-text">Size</label>
+                        <input type="number" id="fontSizeBtn" style="width: 100%; padding: 8px;">
+                    </div>
+                    <div style="flex: 1;">
+                        <label class="small-text">Color</label>
+                        <input type="color" id="fontColorBtn" style="width: 100%; height: 38px; padding: 0; border: none;">
+                    </div>
+                </div>
+
+                <button id="deleteBtn" class="danger-btn">🗑 Remove Field</button>
             </div>
 
             <div class="step-box footer">

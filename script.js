@@ -264,18 +264,23 @@ const gridSize = 40; // The size of the snap blocks (pixels)
 const snapThreshold = 15; // How close to center before snapping to center
 let isGridEnabled = true; // Default state
 
-// --- 1. TOGGLE BUTTON LOGIC ---
-document.getElementById('toggleGridBtn').addEventListener('click', function() {
-    isGridEnabled = !isGridEnabled;
-    
-    // Update Button Text
-    this.innerText = isGridEnabled ? "Grid: ON" : "Grid: OFF";
-    this.style.background = isGridEnabled ? "#555" : "#ccc";
+// --- 1. GRID TOGGLE LOGIC (CHECKBOX) ---
+const gridCheckbox = document.getElementById('gridToggle');
+
+gridCheckbox.addEventListener('change', function() {
+    isGridEnabled = this.checked; // Returns true or false
     
     // Show/Hide Lines
     toggleGridVisibility(isGridEnabled);
     canvas.renderAll();
 });
+
+// Helper: Ensure Grid starts in correct state based on checkbox
+// Add this inside your imgObj.onload function if not already there
+function syncGridState() {
+    isGridEnabled = gridCheckbox.checked;
+    toggleGridVisibility(isGridEnabled);
+}
 
 // Helper: Show or Hide Grid Lines
 function toggleGridVisibility(visible) {
@@ -361,41 +366,103 @@ canvas.on('object:moving', function(options) {
     }
 });
 
-// --- DELETION LOGIC ---
+// --- DELETION LOGIC (FIXED) ---
+const deleteBtn = document.getElementById('deleteBtn');
 
-// 1. Function to delete whatever is currently selected
-function deleteSelectedObjects() {
-    const activeObjects = canvas.getActiveObjects();
+// A. Button Click
+deleteBtn.addEventListener('click', function() {
+    const activeObj = canvas.getActiveObject();
     
-    if (activeObjects.length) {
-        // Discard the selection group first to avoid rendering ghosts
+    if (activeObj) {
+        // 1. Remove the object
+        canvas.remove(activeObj);
+        
+        // 2. Clear selection (This hides the panel automatically via event listeners)
         canvas.discardActiveObject();
         
-        // Loop through all selected objects and remove them
-        activeObjects.forEach(function(obj) {
-            canvas.remove(obj);
-        });
-        
+        // 3. Render changes
         canvas.renderAll();
+    }
+});
+
+// B. Keyboard Shortcut (Delete / Backspace)
+window.addEventListener('keydown', function(e) {
+    if (e.key === "Delete" || e.key === "Backspace") {
+        const activeObj = canvas.getActiveObject();
+        
+        // If nothing selected, do nothing
+        if (!activeObj) return;
+
+        // SAFETY: If user is typing text, do NOT delete the object
+        // 'isEditing' is a Fabric.js property that is true when typing
+        if (activeObj.isEditing) return;
+
+        // Execute Delete
+        canvas.remove(activeObj);
+        canvas.discardActiveObject();
+        canvas.renderAll();
+    }
+});
+
+// --- PROPERTY PANEL LOGIC ---
+
+const propPanel = document.getElementById('properties-panel');
+const fontSelect = document.getElementById('fontFamilyBtn');
+const sizeInput = document.getElementById('fontSizeBtn');
+const colorInput = document.getElementById('fontColorBtn');
+
+// A. LISTEN FOR SELECTION CHANGES (Show/Hide Panel)
+// We listen to 'selection:created' and 'selection:updated' to show the panel
+// We listen to 'selection:cleared' to hide it
+function updatePanelValues() {
+    const activeObj = canvas.getActiveObject();
+    
+    if (activeObj && activeObj.type === 'text') {
+        // Show Panel
+        propPanel.style.display = 'block';
+        
+        // Sync Inputs with Current Object Values
+        fontSelect.value = activeObj.fontFamily;
+        sizeInput.value = activeObj.fontSize;
+        colorInput.value = activeObj.fill;
+    } else {
+        // Hide Panel if nothing selected (or multiple items)
+        propPanel.style.display = 'none';
     }
 }
 
-// 2. Button Click Event
-document.getElementById('deleteBtn').addEventListener('click', deleteSelectedObjects);
+canvas.on('selection:created', updatePanelValues);
+canvas.on('selection:updated', updatePanelValues);
+canvas.on('selection:cleared', function() {
+    propPanel.style.display = 'none';
+});
 
-// 3. Keyboard Event (Delete / Backspace)
-window.addEventListener('keydown', function(e) {
-    // Check if the key pressed is Delete or Backspace
-    if (e.key === "Delete" || e.key === "Backspace") {
-        
-        // SAFETY CHECK: Are we currently typing inside a text box?
-        // If yes, do NOT delete the object, let the default Backspace happen
-        const activeObj = canvas.getActiveObject();
-        if (activeObj && activeObj.isEditing) {
-            return; 
-        }
-        
-        // Otherwise, delete the object
-        deleteSelectedObjects();
+
+// B. APPLY CHANGES (UI -> Canvas)
+
+// 1. Change Font Family
+fontSelect.addEventListener('change', function() {
+    const activeObj = canvas.getActiveObject();
+    if (activeObj) {
+        activeObj.set('fontFamily', this.value);
+        canvas.requestRenderAll();
+    }
+});
+
+// 2. Change Font Size
+sizeInput.addEventListener('input', function() {
+    const activeObj = canvas.getActiveObject();
+    if (activeObj) {
+        activeObj.set('fontSize', parseInt(this.value, 10));
+        canvas.requestRenderAll();
+    }
+});
+
+// 3. Change Font Color
+colorInput.addEventListener('input', function() {
+    const activeObj = canvas.getActiveObject();
+    if (activeObj) {
+        activeObj.set('fill', this.value);
+        canvas.requestRenderAll();
     }
 });
