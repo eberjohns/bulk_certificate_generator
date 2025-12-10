@@ -168,40 +168,52 @@ document.getElementById('generateBtn').addEventListener('click', async function(
     }
 
     const statusDiv = document.getElementById('status-message');
-    statusDiv.innerText = "Processing... Please wait.";
+    statusDiv.innerText = "Processing...";
     
+    // --- CRITICAL FIX START ---
+    
+    // 1. DESELECT EVERYTHING
+    // This removes the blue box, handles, and rotation controls
+    canvas.discardActiveObject();
+    
+    // 2. HIDE GRID TEMPORARILY
+    // We force the grid to be invisible regardless of the button state
+    toggleGridVisibility(false);
+    
+    // 3. RENDER CLEAN STATE
+    canvas.renderAll();
+    
+    // --- CRITICAL FIX END ---
+
     const zip = new JSZip();
     
-    // Loop through every row in the Excel file
+    // Loop through rows
     for (let i = 0; i < excelData.length; i++) {
         const row = excelData[i];
         
-        // Update all text objects on the canvas
         updateCanvasWithRowData(row);
+        canvas.renderAll(); // Render the clean canvas with new text
         
-        // Render the changes
-        canvas.renderAll();
-        
-        // Create a blob (image file) from the canvas
-        // We await this because image generation takes a split second
         const blob = await getCanvasBlob();
-        
-        // Determine filename (use the first column data, usually Name)
-        // Sanitise filename to remove slashes or bad characters
         const fileNameSafe = String(Object.values(row)[0]).replace(/[^a-z0-9]/gi, '_').toLowerCase();
         
-        // Add to zip
         zip.file(`${fileNameSafe}_certificate.png`, blob);
         
-        // Update status
-        statusDiv.innerText = `Generated ${i + 1} of ${excelData.length} certificates...`;
+        statusDiv.innerText = `Generated ${i + 1} of ${excelData.length}...`;
     }
     
-    // Finalize and Download Zip
-    statusDiv.innerText = "Zipping files...";
+    // RESTORE STATE
+    // If grid was originally on, turn it back on
+    if(isGridEnabled) {
+        toggleGridVisibility(true);
+        canvas.renderAll();
+    }
+    
+    // Download
+    statusDiv.innerText = "Zipping...";
     zip.generateAsync({type:"blob"}).then(function(content) {
         saveAs(content, "certificates.zip");
-        statusDiv.innerText = "Download Started!";
+        statusDiv.innerText = "Done!";
     });
 });
 
@@ -250,6 +262,30 @@ document.getElementById('previewBtn').addEventListener('click', function() {
 
 const gridSize = 40; // The size of the snap blocks (pixels)
 const snapThreshold = 15; // How close to center before snapping to center
+let isGridEnabled = true; // Default state
+
+// --- 1. TOGGLE BUTTON LOGIC ---
+document.getElementById('toggleGridBtn').addEventListener('click', function() {
+    isGridEnabled = !isGridEnabled;
+    
+    // Update Button Text
+    this.innerText = isGridEnabled ? "Grid: ON" : "Grid: OFF";
+    this.style.background = isGridEnabled ? "#555" : "#ccc";
+    
+    // Show/Hide Lines
+    toggleGridVisibility(isGridEnabled);
+    canvas.renderAll();
+});
+
+// Helper: Show or Hide Grid Lines
+function toggleGridVisibility(visible) {
+    const objects = canvas.getObjects();
+    objects.forEach(obj => {
+        if (obj.id === 'grid-line') {
+            obj.set('visible', visible);
+        }
+    });
+}
 
 // 1. DRAW THE GRID (Visual Aid)
 function drawGrid() {
@@ -299,27 +335,24 @@ function drawGrid() {
     canvas.add(centerLine);
 }
 
-// 2. HANDLE MOVEMENT (The Snapping Logic)
+// 2. UPDATED SNAPPING LOGIC
 canvas.on('object:moving', function(options) {
+    // IF GRID IS OFF: Do nothing (standard smooth dragging)
+    if (!isGridEnabled) return;
+
     const target = options.target;
     const canvasWidth = canvas.width;
     
-    // A. SNAP TO CENTER (Priority)
-    // Check if the object's center is close to the image center
     const objectCenter = target.left + (target.width * target.scaleX) / 2;
     
+    // A. CENTER SNAP (Always active if Grid is On)
     if (Math.abs(objectCenter - canvasWidth / 2) < snapThreshold) {
-        // Snap exactly to center
         target.set({
-            left: (canvasWidth / 2) - (target.width * target.scaleX) / 2
-        });
-        
-        // For Y-axis, still use grid
-        target.set({
+            left: (canvasWidth / 2) - (target.width * target.scaleX) / 2,
             top: Math.round(target.top / gridSize) * gridSize
         });
     } 
-    // B. SNAP TO GRID (Default)
+    // B. GRID SNAP
     else {
         target.set({
             left: Math.round(target.left / gridSize) * gridSize,
