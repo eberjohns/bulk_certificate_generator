@@ -1,18 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bulk Certificate Generator</title>
-    <link rel="icon" type="image/png" href="./images/logo.png">
-    <link rel="stylesheet" href="style.css">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    
-    <style> .font-loader { opacity: 0; height: 0; width: 0; position: absolute; } </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>Bulk Certificate Generator</title>
+        <meta name="description" content="Generate bulk certificates from Excel/CSV data. Easy template upload, position fields, preview and download as a ZIP of PNG certificates.">
+        <meta name="robots" content="index, follow">
+        <link rel="icon" type="image/png" href="./images/logo.png">
+        <link rel="stylesheet" href="style.css">
+        <link rel="canonical" href="https://your-site.example/">
+        <meta name="theme-color" content="#007bff">
+
+        <!-- Open Graph -->
+        <meta property="og:title" content="Bulk Certificate Generator">
+        <meta property="og:description" content="Generate bulk certificates from spreadsheet data with a simple UI and download as a ZIP of images.">
+        <meta property="og:type" content="website">
+        <meta property="og:image" content="./images/logo.png">
+        <meta property="og:url" content="https://your-site.example/">
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Bulk Certificate Generator">
+        <meta name="twitter:description" content="Generate bulk certificates from spreadsheet data with a simple UI and download as a ZIP of images.">
+        <meta name="twitter:image" content="./images/logo.png">
+
+        <!-- Preconnect fonts for faster loading -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Bulk Certificate Generator",
+            "url": "https://your-site.example/",
+            "description": "Generate bulk certificates from spreadsheet data with a simple UI and download as a ZIP of images.",
+            "image": "https://your-site.example/images/logo.png",
+            "applicationCategory": "DesignTool",
+            "author": {"@type":"Person","name":"Eber Johns C D"}
+        }
+        </script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" defer></script>
+
+        <style> .font-loader { opacity: 0; height: 0; width: 0; position: absolute; } </style>
 </head>
 <body>
     <div class="font-loader" style="font-family: 'Great Vibes'">.</div>
@@ -25,7 +59,7 @@
         
         <div class="main-area">
             <div class="canvas-wrapper">
-                <canvas id="c"></canvas>
+                <canvas id="c" role="img" aria-label="Certificate preview canvas"></canvas>
             </div>
             
             <div class="zoom-controls">
@@ -96,7 +130,7 @@
                 <input type="text" id="fileNamePattern" placeholder="{Name}_Cert">
                 <button id="previewBtn" class="secondary-btn">Preview Certificate</button>
                 <button id="generateBtn" class="primary-btn">Generate & Download Zip</button>
-                <div id="status-message" style="margin-top:10px; color:#007bff; font-size:0.9rem;"></div>
+                <div id="status-message" role="status" aria-live="polite" style="margin-top:10px; color:#007bff; font-size:0.9rem;"></div>
             </div>
             
             <div class="about-section">
