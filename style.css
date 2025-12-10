@@ -1,207 +1,97 @@
 @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Great+Vibes&family=Oswald&family=Playfair+Display&family=Roboto&display=swap');
 
-/* style.css */
 body {
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f4f9;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background-color: #f0f2f5;
     height: 100vh;
-    overflow: hidden; /* Prevent body scroll, let containers scroll */
+    overflow: hidden; /* Desktop: No body scroll */
 }
 
 .app-container {
     display: flex;
-    height: 100vh;
+    height: 100%;
+    width: 100%;
 }
 
-/* SIDEBAR STYLES */
+/* --- MAIN CANVAS AREA --- */
+.main-area {
+    flex-grow: 1;
+    background-color: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden; 
+}
+
+.canvas-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+canvas { touch-action: none; } /* Stop browser swipe handling */
+
+.zoom-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 100;
+}
+
+.zoom-controls button {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: none; background: rgba(255, 255, 255, 0.9);
+    font-size: 1.2rem; font-weight: bold; color: #333;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3); cursor: pointer;
+}
+
+/* --- SIDEBAR --- */
 .sidebar {
     width: 350px;
+    min-width: 350px;
     background: white;
     padding: 20px;
     box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow-y: auto; 
     z-index: 10;
 }
 
-h1 { color: #333; margin-top: 0; }
-h3 { margin-bottom: 10px; color: #555; font-size: 1rem; }
-.small-text { font-size: 0.8rem; color: #888; margin-top: -5px; margin-bottom: 10px; }
+/* --- COMPONENTS --- */
+.step-box { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+.brand-container { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0; }
+.app-logo { width: 40px; height: 40px; border-radius: 6px; }
+.brand-text h1 { font-size: 1.2rem; margin: 0; color: #333; }
+.brand-subtitle { font-size: 0.8rem; color: #007bff; text-transform: uppercase; font-weight: bold; }
 
-.step-box {
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
-}
+input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-bottom: 5px; }
+.field-btn { background: #e7f1ff; color: #0056b3; border: 1px solid #b8daff; padding: 8px 12px; margin: 5px 5px 0 0; border-radius: 4px; cursor: pointer; }
+.primary-btn { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+.secondary-btn { width: 100%; padding: 10px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 5px; }
+.danger-btn { width: 100%; padding: 10px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 5px; }
 
-/* BUTTONS */
-input[type="file"] {
-    width: 100%;
-    padding: 5px;
-    background: #f9f9f9;
-    border: 1px dashed #ccc;
-    border-radius: 4px;
-}
+/* Social Buttons */
+.about-section { margin-top: auto; padding-top: 20px; }
+.social-links { display: flex; gap: 10px; }
+.social-btn { flex: 1; text-align: center; padding: 10px; border-radius: 4px; color: white; text-decoration: none; font-size: 0.8rem; font-weight: bold; }
+.github { background-color: #24292e; } /* GitHub Black */
+.youtube { background-color: #ff0000; } /* YouTube Red */
 
-.field-btn {
-    background: #e1eaff;
-    color: #0056b3;
-    border: 1px solid #b8daff;
-    padding: 8px 12px;
-    margin: 5px 5px 0 0;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s;
-}
+/* Layers List */
+#layers-container button:hover { background-color: #f0f0f0 !important; }
 
-.field-btn:hover { background: #d0defa; }
-
-.primary-btn {
-    width: 100%;
-    padding: 12px;
-    background: #28a745;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 10px;
-}
-.primary-btn:hover { background: #218838; }
-
-.secondary-btn {
-    width: 100%;
-    padding: 10px;
-    background: #6c757d;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    margin-top: 10px;
-    cursor: pointer;
-}
-
-.main-area {
-    flex-grow: 1;
-    background-color: #e9ecef;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    overflow: hidden; /* Prevent scrolling, we will scale the image instead */
-}
-
-/* This targets the wrapper Fabric.js creates automatically */
-.canvas-container {
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    border: 1px solid #ddd; 
-}
-
-.danger-btn {
-    width: 100%;
-    padding: 10px;
-    background: #dc3545; /* Red */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.2s;
-}
-
-.danger-btn:hover {
-    background: #c82333;
-}
-
-/* --- ABOUT SECTION (Bottom of Sidebar) --- */
-
-.about-section {
-    margin-top: auto; /* Pushes this section to the bottom */
-    padding-top: 20px;
-}
-
-.divider {
-    height: 1px;
-    background: #eee;
-    margin-bottom: 15px;
-}
-
-.about-section p {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.social-links {
-    display: flex;
-    gap: 10px;
-}
-
-.social-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: white;
-    transition: transform 0.2s, opacity 0.2s;
-}
-
-.social-btn:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
-}
-
-.github {
-    background-color: #24292e; /* GitHub Black */
-}
-
-.youtube {
-    background-color: #ff0000; /* YouTube Red */
-}
-
-/* --- BRANDING --- */
-.brand-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 30px; /* Space before the first step */
-    padding-bottom: 20px;
-    border-bottom: 2px solid #f0f0f0;
-}
-
-.app-logo {
-    width: 48px;
-    height: 48px;
-    object-fit: contain; /* Keeps aspect ratio */
-    border-radius: 8px;  /* Soft corners */
-}
-
-.brand-text {
-    display: flex;
-    flex-direction: column;
-}
-
-.brand-text h1 {
-    font-size: 1.1rem; /* Slightly smaller to fit two lines */
-    font-weight: 700;
-    color: #2c3e50;
-    margin: 0;
-    line-height: 1.2;
-}
-
-.brand-subtitle {
-    font-size: 0.85rem;
-    color: #007bff; /* Blue accent color */
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+/* --- MOBILE --- */
+@media (max-width: 768px) {
+    .app-container { flex-direction: column; }
+    .main-area { height: 45vh; width: 100%; order: 1; border-bottom: 4px solid #007bff; flex-shrink: 0; }
+    .sidebar { width: 100%; height: 55vh; order: 2; padding: 20px; box-sizing: border-box; }
 }
