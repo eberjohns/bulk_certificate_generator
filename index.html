@@ -70,6 +70,15 @@
                 <button id="deleteBtn" class="danger-btn">🗑 Remove Field</button>
             </div>
 
+            <div style="margin-bottom: 15px;">
+                <label class="small-text">Filename Pattern (Optional)</label>
+                <input type="text" id="fileNamePattern" placeholder="e.g. {Name}_Certificate" 
+                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                <p class="small-text" style="font-size: 0.75rem; margin-top: 5px;">
+                    Use placeholders like {Name} or {Event}
+                </p>
+            </div>
+
             <div class="step-box footer">
                 <button id="previewBtn" class="secondary-btn">Preview First Row</button>
                 <button id="generateBtn" class="primary-btn">Generate & Download Zip</button>

@@ -158,8 +158,7 @@ function addTextToCanvas(headerName) {
     canvas.renderAll();
 }
 
-// 6. GENERATE & ZIP (THE MAGIC LOOP)
-// ----------------------------------
+// 6. GENERATE & ZIP (THE MAGIC LOOP)(With Custom Filenames) ---
 document.getElementById('generateBtn').addEventListener('click', async function() {
     
     if(excelData.length === 0) {
@@ -170,46 +169,59 @@ document.getElementById('generateBtn').addEventListener('click', async function(
     const statusDiv = document.getElementById('status-message');
     statusDiv.innerText = "Processing...";
     
-    // --- CRITICAL FIX START ---
-    
-    // 1. DESELECT EVERYTHING
-    // This removes the blue box, handles, and rotation controls
+    // 1. CLEANUP (Hide Grid & Selection)
     canvas.discardActiveObject();
-    
-    // 2. HIDE GRID TEMPORARILY
-    // We force the grid to be invisible regardless of the button state
     toggleGridVisibility(false);
-    
-    // 3. RENDER CLEAN STATE
     canvas.renderAll();
-    
-    // --- CRITICAL FIX END ---
 
     const zip = new JSZip();
     
-    // Loop through rows
+    // 2. GET FILENAME PATTERN
+    const patternInput = document.getElementById('fileNamePattern').value.trim();
+    // Default to "{First Header}_Certificate" if input is empty
+    const defaultPattern = `{${headers[0]}}_Certificate`; 
+    const finalPattern = patternInput || defaultPattern;
+
+    // 3. LOOP
     for (let i = 0; i < excelData.length; i++) {
         const row = excelData[i];
         
+        // A. Update Canvas
         updateCanvasWithRowData(row);
-        canvas.renderAll(); // Render the clean canvas with new text
+        canvas.renderAll(); 
         
+        // B. Generate Image
         const blob = await getCanvasBlob();
-        const fileNameSafe = String(Object.values(row)[0]).replace(/[^a-z0-9]/gi, '_').toLowerCase();
         
-        zip.file(`${fileNameSafe}_certificate.png`, blob);
+        // C. GENERATE CUSTOM FILENAME
+        let filename = finalPattern;
+        
+        // Replace every {Header} with the actual data from the row
+        headers.forEach(header => {
+            // Regex to replace all occurrences of {Header} (case insensitive)
+            const regex = new RegExp(`{${header}}`, 'gi'); 
+            const replacement = String(row[header] || '');
+            filename = filename.replace(regex, replacement);
+        });
+
+        // D. SANITIZE FILENAME
+        // Remove special characters that crash file systems (like / \ : * ? " < > |)
+        // We replace them with underscores
+        const safeFilename = filename.replace(/[^a-z0-9 \-_]/gi, '_');
+        
+        // Add to zip
+        zip.file(`${safeFilename}.png`, blob);
         
         statusDiv.innerText = `Generated ${i + 1} of ${excelData.length}...`;
     }
     
-    // RESTORE STATE
-    // If grid was originally on, turn it back on
+    // 4. RESTORE STATE
     if(isGridEnabled) {
         toggleGridVisibility(true);
         canvas.renderAll();
     }
     
-    // Download
+    // 5. DOWNLOAD
     statusDiv.innerText = "Zipping...";
     zip.generateAsync({type:"blob"}).then(function(content) {
         saveAs(content, "certificates.zip");
