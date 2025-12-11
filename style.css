@@ -5,6 +5,7 @@ body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
     background-color: #f0f2f5;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden; /* Desktop: No body scroll */
 }
 
@@ -93,5 +94,28 @@ input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius
 @media (max-width: 768px) {
     .app-container { flex-direction: column; }
     .main-area { height: 45vh; width: 100%; order: 1; border-bottom: 4px solid #007bff; flex-shrink: 0; }
-    .sidebar { width: 100%; height: 55vh; order: 2; padding: 20px; box-sizing: border-box; }
+    .sidebar {
+        width: 100%;
+        height: 55vh; 
+        order: 2;
+        
+        padding: 20px;
+        /* padding-bottom: 20px; */
+        
+        box-sizing: border-box;
+        overflow-y: auto; 
+        -webkit-overflow-scrolling: touch; 
+    }
+}
+
+.author-link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    display: block;
+}
+
+.author-link:hover p {
+    color: #333;
+    transition: color 0.2s;
 }

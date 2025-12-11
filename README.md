@@ -9,13 +9,15 @@ It features a drag-and-drop interface, supports Excel/CSV uploads, and runs enti
 
 [Visit website](http://bulkcertificategenerator.netlify.app/)
 
+[View Demo](https://www.youtube.com/watch?v=_-TdDBgRhEY)
+
 ---
 
 ## 📱 Screenshots
 
 | Desktop View | Mobile View |
 |:---:|:---:|
-| ![Desktop UI](./images/desktop-screenshot.png) | ![Mobile UI](./images/mobile-screenshot.png) |
+| ![Desktop UI](./images/desktop-screenshot.png) | ![Mobile UI](./images/mobile-screenshot.jpg) |
 
 ---
 
