@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - bulkcertificategenerator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid #e2e8f0;
+        }
+        h1 {
+            font-size: 1.8rem;
+            color: #0f172a;
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 12px;
+        }
+        h2 {
+            font-size: 1.25rem;
+            color: #334155;
+            margin-top: 24px;
+        }
+        p, li {
+            font-size: 0.95rem;
+            color: #475569;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .footer {
+            margin-top: 30px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        a {
+            color: #6366f1;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Privacy Policy</h1>
+        <p>Last updated: July 14, 2026</p>
+        
+        <p>This Privacy Policy describes how the <strong>bulkcertificategenerator</strong> application collects, uses, and shares your data when you visit and use our services.</p>
+        
+        <h2>1. Data Collection and Usage</h2>
+        <p>We believe in absolute data privacy. Our application operates <strong>entirely client-side</strong> in your browser:</p>
+        <ul>
+            <li><strong>Spreadsheet & Template Data</strong>: Any Excel/CSV sheets and template images you import are parsed and cached locally in your browser's offline storage (IndexedDB). We do not send, transmit, or store this data on any remote server.</li>
+            <li><strong>Email Cache</strong>: Base64 data from generated certificates is kept temporarily in local memory to attach them to your emails. This data is cleared when you close the tab or reset your workspace.</li>
+        </ul>
+
+        <h2>2. Google User Data (Gmail API)</h2>
+        <p>Our application uses Google OAuth 2.0 to connect to your Gmail account and send certificates. This access is governed strictly by the following boundaries:</p>
+        <ul>
+            <li><strong>Purpose</strong>: Access is requested solely for the purpose of sending bulk certificates to your participants.</li>
+            <li><strong>Scopes Used</strong>: We request the <code>gmail.send</code> scope (to transmit emails with attachments) and <code>userinfo.email</code> (to identify your sender address).</li>
+            <li><strong>Data Sharing</strong>: Your Google authentication tokens and profile data live inside your browser session and are never shared with us or any third parties.</li>
+        </ul>
+
+        <h2>3. Third-Party Services</h2>
+        <p>We use Google Cloud Services (identity tokens and Gmail REST APIs) to complete the mailout. The usage of this data is subject to Google's Privacy Policies.</p>
+
+        <h2>4. Contact Us</h2>
+        <p>If you have any questions or feedback regarding this privacy statement, you can reach out via our GitHub profile: <a href="https://github.com/Nitto26" target="_blank">github.com/Nitto26</a>.</p>
+
+        <div class="footer">
+            &copy; 2026 bulkcertificategenerator. All rights reserved.<br>
+            <a href="index.html">Return to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>
