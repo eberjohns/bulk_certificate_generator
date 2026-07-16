@@ -678,7 +678,7 @@ let userEmail = '';
 window.initGoogleAuth = () => {
     try {
         tokenClient = google.accounts.oauth2.initTokenClient({
-            client_id: '630454500322-rgghburlcd1ojqma9ko365eeslnlpv43.apps.googleusercontent.com',
+            client_id: '972249221035-787q8a3ijndkr71d5c42alj0jbca81b1.apps.googleusercontent.com',
             scope: 'https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.email',
             callback: async (response) => {
                 if (response.error !== undefined) {
@@ -1020,4 +1020,4 @@ document.getElementById('resetWorkspaceBtn').addEventListener('click', async () 
 
 // Run state recovery on launch
 restoreSavedState();
-
+
